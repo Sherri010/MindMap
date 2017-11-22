@@ -1,7 +1,7 @@
 {
   "development": {
     "username": "mindmapadmin",
-    "password": 'Kaspersky67',
+    "password": "Kaspersky67",
     "database": "mindmap",
     "host": "127.0.0.1",
     "dialect": "postgres"
