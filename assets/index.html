@@ -1,14 +1,8 @@
 <html>
-<head></head>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script> 
-<script>
-	const socket = io.connect('http://localhost:4567');
-	socket.on('connect', function(data){
-		socket.emit('join', 'hi----');
-	})
-</script>
-<body>
-	<h3>Socket - express - node </h3>
-</body>
-
+	<head>
+		<script src="dist/bundle.js"></script>
+	</head>
+	<body>
+		<h3>Socket - express - node </h3>
+	</body>
 </html>

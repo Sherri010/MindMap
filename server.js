@@ -8,11 +8,12 @@ var socket = require('socket.io')(server);
 var models = require('./server/models/index');
 
 // end points
-app.use(express.static(__dirname + '/assets'));
+app.use(express.static(__dirname + '/assets/'));
 app.get('/', function(req, res) {
 	res.sendFile(__dirname + '/assets/index.html');
-})
+});
 
+// setting up the socket
 socket.on('connect', function(client){
 	console.log('Client connected...');
 	models.Blob.create({
@@ -28,7 +29,7 @@ socket.on('connect', function(client){
 
 
 	client.on('join', function(data){
-		console.log(data);
+		console.log('client said...', data);
 	})
 })
 

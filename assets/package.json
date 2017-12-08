@@ -1,21 +1,20 @@
 {
-  "name": "mindmap",
+  "name": "assets",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-  
+    "clean": "rimraf build",
+    "webpack": "webpack",
+    "build": "npm run clean && webpack",
+    "serve": "webpack --watch & webpack-dev-server & open http://localhost:4567"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "4.16.2",
-    "pg": "6.4.1",
-    "pg-format": "1.0.4",
-    "pg-hstore": "2.3.2",
-    "sequelize": "3.12.2",
-    "sequelize-cli": "2.1.0",
-    "socket.io": "2.0.4"
+    "rimraf": "2.6.2",
+    "socket.io": "1.4.5",
+    "socket.io-client": "1.4.5"
   },
   "devDependencies": {
     "babel-core": "6.26.0",
@@ -24,6 +23,6 @@
     "babel-preset-react": "6.24.1",
     "nodemon": "1.12.1",
     "webpack": "3.8.1",
-    "webpack-dev-server": "2.9.4"
+    "webpack-dev-server": "2.2.0-rc.0"
   }
 }
