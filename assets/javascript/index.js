@@ -1,1 +1,1 @@
-import './sockets';
+import './home.js';

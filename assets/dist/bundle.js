@@ -57,7 +57,7 @@
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
+/******/ 	__webpack_require__.p = "http://localhost:3000";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 23);
@@ -3591,7 +3591,7 @@ module.exports = function(obj, fn){
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__sockets__ = __webpack_require__(24);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__home_js__ = __webpack_require__(56);
 
 
 
@@ -3600,21 +3600,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = createNoteBook;
+/* unused harmony export deleteNoteBook */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_socket_io_client__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_socket_io_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_socket_io_client__);
 
 
 const socket = __WEBPACK_IMPORTED_MODULE_0_socket_io_client___default()('http://localhost:4567');
-socket.on('connect', function(data){
-  socket.emit('join', 'hi----');
-});
 
-const body = document.getElementsByTagName('body');
-const el = document.createElement('p');
-el.innerText = ' hi from webpack :) ';
-// body.appendChild(el);
+function createNoteBook(args, cb){
+  return socket.emit('noteBook', args, cb);
+}
 
-console.log('webapck says hi not', el)
+
+function deleteNoteBook({ id }){
+  return socket.emit('notebook', id, function(data){
+    console.log('delete notebook', data);
+  })
+}
 
 
 /***/ }),
@@ -8577,6 +8580,41 @@ Backoff.prototype.setJitter = function(jitter){
   this.jitter = jitter;
 };
 
+
+
+/***/ }),
+/* 56 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__sockets__ = __webpack_require__(24);
+
+
+const allNoteBooks = [];
+
+function onClick (){
+  Object(__WEBPACK_IMPORTED_MODULE_0__sockets__["a" /* createNoteBook */])({ name: 'sherri sockets' }, function(data){
+    allNoteBooks.push(data);
+    addNotebookToView();
+  });
+}
+
+
+function addNotebookToView(){
+  const DOMNode = document.getElementById('list');
+  console.log(DOMNode, document)
+  const ul = document.createElement('ul');
+  allNoteBooks.forEach(function(notebook) {
+    const li = document.createElement('li');
+    li.innerText = notebook.id + ' ' + notebook.name + ' ' + notebook.createdAt;
+    ul.appendChild(li);
+  });
+
+  DOMNode.appendChild(ul);
+}
+
+document.getElementById('createNoteBook').addEventListener('click', onClick);
+console.log(document.getElementById('list'))
 
 
 /***/ })
