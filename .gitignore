@@ -2,3 +2,5 @@ node_modules
 ./server/config.json
 npm-debug.log
 .DS_Store
+.env
+/assets/.DS_Store
