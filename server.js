@@ -8,8 +8,14 @@ var app = express();
 var server = http.createServer(app);
 var socket = require('socket.io')(server);
 var models = require('./server/models/index');
+var session = require('express-session');
+var bodyParser = require('body-parser');
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static(__dirname + '/assets/'));
 
+//auth
 passport.use(
 	new GoogleStrategy({
 		callbackURL: '/auth/google/redirect',
@@ -17,27 +23,59 @@ passport.use(
 		clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET,
 	},
 	function(accessToken, refreshToken, profile, done) {
-		console.log('accessToken', profile);
-	  //      // User.findOrCreate({ googleId: profile.id }, function (err, user) {
-	  //      //   return done(err, user);
-	  //      // });
-	  // }
-	}
-));
+		console.log('accessToken', profile._json.name.givenName,profile._json.name.familyName);
+		const profileDetail = profile._json;
 
-// end points
-app.use(express.static(__dirname + '/assets/'));
+		models.User.find({
+			where: {
+				googleId: profileDetail.id,
+			}
+		}).then(function(user){
+			console.log('--------------user', user)
+			if(!user){
+				models.User.create({
+						firstName: profileDetail.name.givenName,
+						lastName: profileDetail.name.familyName,
+						image: profileDetail.image.url,
+						googleId: profileDetail.id,
+				}).then(function(user) {
+						console.log('currentUERSER', user)
+
+						return done();
+				});
+				console.log('after')
+			}
+		})
+
+
+
+	// 	models.User
+  // .findOrCreate({where: { googleId: profileDetail.id,}, defaults: {
+	// 	fistName: profileDetail.name.givenName,
+	// 	lastName: profileDetail.name.familyName,
+	// 	image: profileDetail.image.url,
+	// 	googleId: profileDetail.id,
+	// }})
+  // .spread((user, created) => {
+  //   console.log(created)
+  // })
+	return done();
+}));
+
+
+//session
+app.use(session({
+	secret: process.env.SESSION_SECRET, //salt
+	resave: false, // update session whenever there is a change only
+	saveUninitialized: false, //create cookie only when a user is logged in
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get('/', function(req, res) {
 	res.sendFile(__dirname + '/assets/index.html');
 });
 
-// app.get('/login', passport.authenticate('google', {
-// 	scope: ['profile'],
-// 	failureRedirect: '/',
-// }),function(req, res) {
-// 	res.redirect('/');
-// });
 
 app.get('/auth/google/redirect',
   passport.authenticate('google', { scope: ['profile'], failureRedirect: '/' }),
