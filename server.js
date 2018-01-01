@@ -1,5 +1,5 @@
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20');
+var passport = require('passport');
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 require('dotenv').config();
 // server and db setups
 var express = require('express');
@@ -15,54 +15,58 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(__dirname + '/assets/'));
 
-//auth
+///////////////////auth
+
+// used to serialize the user for the session
+passport.serializeUser(function(user, done) {
+		done(null, user.id);
+});
+
+// used to deserialize the user
+passport.deserializeUser(function(id, done) {
+		models.User.find({where: { googleId: id } }).then(function(user){
+				done(null,user);
+		});
+});
+
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) { return next(); }
+  res.redirect('/');
+}
+
 passport.use(
 	new GoogleStrategy({
-		callbackURL: '/auth/google/redirect',
+		callbackURL: '/auth/google/callback',
 		clientID: process.env.GOOGLE_AUTH_CLIENT_ID,
 		clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET,
 	},
 	function(accessToken, refreshToken, profile, done) {
-		console.log('accessToken', profile._json.name.givenName,profile._json.name.familyName);
-		const profileDetail = profile._json;
-
-		models.User.find({
-			where: {
-				googleId: profileDetail.id,
-			}
-		}).then(function(user){
-			console.log('--------------user', user)
-			if(!user){
-				models.User.create({
-						firstName: profileDetail.name.givenName,
-						lastName: profileDetail.name.familyName,
-						image: profileDetail.image.url,
+				// // TODO try to use findOrCreate
+				const profileDetail = profile._json;
+				models.User.find({
+					where: {
 						googleId: profileDetail.id,
-				}).then(function(user) {
-						console.log('currentUERSER', user)
-
-						return done();
+					}
+				}).then(function(user){
+					if(!user){
+						models.User.create({
+							firstName: profileDetail.name.givenName,
+							lastName: profileDetail.name.familyName,
+							image: profileDetail.image.url,
+							googleId: profileDetail.id,
+						}).then(function(user){
+							return done(null, profile);
+						})
+					}
+					else {
+						return done(null, profile);
+					}
 				});
-				console.log('after')
-			}
-		})
 
-
-
-	// 	models.User
-  // .findOrCreate({where: { googleId: profileDetail.id,}, defaults: {
-	// 	fistName: profileDetail.name.givenName,
-	// 	lastName: profileDetail.name.familyName,
-	// 	image: profileDetail.image.url,
-	// 	googleId: profileDetail.id,
-	// }})
-  // .spread((user, created) => {
-  //   console.log(created)
-  // })
-	return done();
+				return done(null, profile);
 }));
 
-
+///////////////////////////////
 //session
 app.use(session({
 	secret: process.env.SESSION_SECRET, //salt
@@ -77,12 +81,39 @@ app.get('/', function(req, res) {
 });
 
 
-app.get('/auth/google/redirect',
-  passport.authenticate('google', { scope: ['profile'], failureRedirect: '/' }),
-  function(req, res) { console.log('in call back')
-    res.redirect('/');
-  });
+////////////////
+//auth
+///////////////
+// TODO fix the path to match the callback
+app.get('/login',
+  passport.authenticate(
+		'google',
+		{
+			scope: ['profile', 'email'],
+			failureRedirect: '/',
+}));
 
+
+app.get('/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/faildlogin' }),
+  function(req, res) {
+    res.redirect('/personalLibrary');
+});
+
+app.get('/personalLibrary', ensureAuthenticated,function(req,res){
+	console.log('user stored in session', req.session.passport.user)
+	res.redirect('/');
+})
+
+app.get('/logout', ensureAuthenticated, function (req, res) {
+	console.log('USER',req.session.passport.user, 'is logging out');
+  req.session.passport.user = null;
+  res.redirect('/');
+});
+
+/////////////
+///sockets
+/////////////
 // setting up the socket
 socket.on('connect', function(client){
 	console.log('Client connected...');
@@ -102,8 +133,7 @@ socket.on('connect', function(client){
 	    console.log('created', notebook);
 			cb(notebook);
 	  });
-	})
-
+	});
 });
 
 server.listen(4567, function() {console.log('Listening on 4567...')});
