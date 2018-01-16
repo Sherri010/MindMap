@@ -9,7 +9,6 @@ function onClick (){
   });
 }
 
-
 function addNotebookToView(){
   const DOMNode = document.getElementById('list');
   console.log(DOMNode, document)
@@ -24,4 +23,3 @@ function addNotebookToView(){
 }
 
 document.getElementById('createNoteBook').addEventListener('click', onClick);
-console.log(document.getElementById('list'))
