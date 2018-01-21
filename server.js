@@ -102,13 +102,13 @@ app.get('/auth/google/callback',
 
 app.get('/personalLibrary', ensureAuthenticated,function(req,res){
 	console.log('user stored in session', req.session.passport.user)
-	res.redirect('/');
-})
+	res.sendFile(__dirname + '/assets/index.html');
+});
 
 app.get('/logout', ensureAuthenticated, function (req, res) {
 	console.log('USER',req.session.passport.user, 'is logging out');
-  req.session.passport.user = null;
-  res.redirect('/');
+  	req.session.passport.user = null;
+  	res.redirect('/');
 });
 
 /////////////

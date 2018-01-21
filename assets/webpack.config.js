@@ -4,7 +4,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 // todo 'react-hot',
 module.exports = {
-	entry: './javascript/index.jsx',
+	entry: './javascript/app.jsx',
 	output: {
 		path: path.join(__dirname, '/dist'),
 		filename: 'bundle.js',
@@ -24,17 +24,6 @@ module.exports = {
 					presets: ['react', 'es2015']
 				}
 			},
-			// {
-			//   test: /\.css$/,
-			//   loader: 'style-loader'
-			// }, {
-			//   test: /\.css$/,
-			//   loader: 'css-loader',
-			//   query: {
-			//     modules: true,
-			//     localIdentName: '[name]__[local]___[hash:base64:5]'
-			//   }
-			// },
 			{
 					test: /\.styl$/,
 					use: [
