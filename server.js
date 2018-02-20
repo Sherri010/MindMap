@@ -8,13 +8,23 @@ var app = express();
 var server = http.createServer(app);
 var socket = require('socket.io')(server);
 var models = require('./server/models/index');
+var cookieParser = require('cookie-parser');
 var session = require('express-session');
+var validator = require('express-validator');
 var bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(validator());
 app.use(express.static(__dirname + '/assets/'));
-
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(session({
+	secret: process.env.SESSION_SECRET, //salt
+	resave: false, // update session whenever there is a change only
+	saveUninitialized: false, //create cookie only when a user is logged in
+}));
 ///////////////////auth
 
 // used to serialize the user for the session
@@ -30,7 +40,12 @@ passport.deserializeUser(function(id, done) {
 });
 
 function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) { return next(); }
+  if (req.isAuthenticated()) {
+	  console.log('is authenticate')
+	  return next();
+  }
+
+  console.log('redirect back')
   res.redirect('/');
 }
 
@@ -62,19 +77,12 @@ passport.use(
 						return done(null, profile);
 					}
 				});
-
 				return done(null, profile);
 }));
 
 ///////////////////////////////
 //session
-app.use(session({
-	secret: process.env.SESSION_SECRET, //salt
-	resave: false, // update session whenever there is a change only
-	saveUninitialized: false, //create cookie only when a user is logged in
-}));
-app.use(passport.initialize());
-app.use(passport.session());
+
 
 app.get('/', function(req, res) {
 	res.sendFile(__dirname + '/assets/index.html');
@@ -91,16 +99,20 @@ app.get('/login',
 		{
 			scope: ['profile', 'email'],
 			failureRedirect: '/',
-}));
+		}
+));
 
 
 app.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/faildlogin' }),
   function(req, res) {
+	  console.log('-------CALL BACK---')
     res.redirect('/personalLibrary');
 });
 
-app.get('/personalLibrary', ensureAuthenticated,function(req,res){
+app.get('/personalLibrary',function(req,res){
+	console.log('------- PERSONAL-----')
+	req.session.userLogged = req.session.passport.user;
 	console.log('user stored in session', req.session.passport.user)
 	res.sendFile(__dirname + '/assets/index.html');
 });
