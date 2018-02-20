@@ -12,6 +12,12 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var validator = require('express-validator');
 var bodyParser = require('body-parser');
+var redis   = require("redis");
+var redisStore = require('connect-redis')(session);
+var client  = redis.createClient();
+
+
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -22,6 +28,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(session({
 	secret: process.env.SESSION_SECRET, //salt
+	store: new redisStore({ host: 'localhost', port: 6379, client: client,ttl :  260}),
 	resave: false, // update session whenever there is a change only
 	saveUninitialized: false, //create cookie only when a user is logged in
 }));
@@ -106,13 +113,13 @@ app.get('/login',
 app.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/faildlogin' }),
   function(req, res) {
-	  console.log('-------CALL BACK---')
+	  req.session.key = req.body.email;
+	  console.log('REQQQQ', req.session)
     res.redirect('/personalLibrary');
 });
 
 app.get('/personalLibrary',function(req,res){
-	console.log('------- PERSONAL-----')
-	req.session.userLogged = req.session.passport.user;
+	// req.session.userLogged = req.session.passport.user;
 	console.log('user stored in session', req.session.passport.user)
 	res.sendFile(__dirname + '/assets/index.html');
 });
