@@ -12,31 +12,25 @@ export default class PersonalDashboard extends Component {
             user: {},
         }
     }
-    componentDidMount(){
-        // $.ajax({
-        //    type: 'GET',
-        //    url: 'http://localhost:4567/user',
-        //    error: function() {
-        //       console.log('error on ajax')
-        //    },
-        //    success: function(data) {
-        //        console.log(data);
-        //        user = data;
-        //    }
-        // });
 
+    componentDidMount(){
+        const component = this;
         getUser(function getUserCallback(res){
-            user = console.log(res)
+            // user = console.log(res)
+            user = res;
+            component.setState({ user })
+            console.log('CDM', user)
         });
     }
 
     render(){
         const { user } = this.state;
         console.log('redern', user)
-        // const { lastName } = user;
+        const { lastName } = user;
+
         return (
             <div>
-                <h3>Personal Dashboard</h3>
+                <h3>Personal Dashboard {lastName}</h3>
             </div>
         );
     }
