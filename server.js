@@ -50,23 +50,6 @@ server.listen(4567, function() {console.log('Listening on 4567...')});
 io.on('connection', function(socket){
 	console.log('Client connected...');
 
-	// socket.on('join', function(data){
-	// 	console.log('client said. join..', data);
-	// });
-	//
-	// socket.on('tag', function(data){
-	// 	console.log('client TAG said tag...', data);
-	// });
-	//
-	// socket.on('noteBook', function(data, cb){
-	// 	models.Notebook.create({
-	//     name: data.name,
-	//   }).then(function(notebook) {
-	//     console.log('created', notebook);
-	// 		cb(notebook);
-	//   });
-	// });
-
 	socket.on('user', function(data, cb){
 		console.log('USER SOCKET', socket.request.session)
 		let user;
@@ -144,9 +127,6 @@ passport.use(
 				});
 				return done(null, profile);
 }));
-
-///////////////////////////////
-//session
 
 
 app.get('/', function(req, res) {
