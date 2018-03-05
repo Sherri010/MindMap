@@ -60,6 +60,7 @@
 /******/ 	__webpack_require__.p = "http://localhost:3000";
 /******/
 /******/ 	// Load entry module and return exports
+<<<<<<< Updated upstream
 /******/ 	return __webpack_require__(__webpack_require__.s = 34);
 /******/ })
 /************************************************************************/
@@ -24000,6 +24001,18 @@ module.exports = function hoistNonReactStatics(targetComponent, sourceComponent,
     return targetComponent;
 };
 
+=======
+/******/ 	return __webpack_require__(__webpack_require__.s = 35);
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ 35:
+/***/ (function(module, exports) {
+
+throw new Error("Module build failed: Error: ENOENT: no such file or directory, open '/Users/sherri/MindMap/assets/javascript/app.jsx'");
+>>>>>>> Stashed changes
 
 /***/ })
-/******/ ]);
+
+/******/ });

@@ -1,13 +1,20 @@
 import React,{ Component } from 'react';
 import PropTypes from 'prop-types';
 import { getUser } from '../../sockets/users';
+import { fetchUser } from '../../actions';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
+
+
 
 let user;
 
 
-export default class PersonalDashboard extends Component {
+class PersonalDashboard extends Component {
     constructor(props){
         super(props);
+        this.boundActionCreators = bindActionCreators(fetchUser, props.dispatch)
         this.state = {
             user: {},
         }
@@ -15,12 +22,17 @@ export default class PersonalDashboard extends Component {
 
     componentDidMount(){
         const component = this;
+        let { dispatch } = this.props;
+        console.log('**', this.props)
         getUser(function getUserCallback(res){
             // user = console.log(res)
             user = res;
             component.setState({ user })
             console.log('CDM', user)
         });
+
+        let action = fetchUser();
+        dispatch(action)
     }
 
     render(){
@@ -35,3 +47,4 @@ export default class PersonalDashboard extends Component {
         );
     }
 }
+export default connect(null,{})(PersonalDashboard);
