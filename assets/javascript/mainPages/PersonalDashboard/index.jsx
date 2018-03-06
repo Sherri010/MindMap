@@ -14,7 +14,6 @@ let user;
 class PersonalDashboard extends Component {
     constructor(props){
         super(props);
-        this.boundActionCreators = bindActionCreators(fetchUser, props.dispatch)
         this.state = {
             user: {},
         }
@@ -24,15 +23,15 @@ class PersonalDashboard extends Component {
         const component = this;
         let { dispatch } = this.props;
         console.log('**', this.props)
-        getUser(function getUserCallback(res){
-            // user = console.log(res)
-            user = res;
-            component.setState({ user })
-            console.log('CDM', user)
-        });
-
-        let action = fetchUser();
-        dispatch(action)
+        // getUser(function getUserCallback(res){
+        //     // user = console.log(res)
+        //     user = res;
+        //     component.setState({ user })
+        //     console.log('CDM', user)
+        // });
+        //
+        // let action = fetchUser();
+        // dispatch(action)
     }
 
     render(){
@@ -47,4 +46,19 @@ class PersonalDashboard extends Component {
         );
     }
 }
-export default connect(null,{})(PersonalDashboard);
+
+const mapStateToProps = state => {
+  return {
+    user: state.user
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    usetGet: id => {
+      dispatch(toggleTodo(id))
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PersonalDashboard);
