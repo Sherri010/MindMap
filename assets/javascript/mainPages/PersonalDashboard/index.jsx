@@ -21,7 +21,7 @@ class PersonalDashboard extends Component {
 
     componentDidMount(){
         const component = this;
-        let { dispatch } = this.props;
+        let { userGet } = this.props;
         console.log('**', this.props)
         // getUser(function getUserCallback(res){
         //     // user = console.log(res)
@@ -32,6 +32,8 @@ class PersonalDashboard extends Component {
         //
         // let action = fetchUser();
         // dispatch(action)
+
+        userGet();
     }
 
     render(){
@@ -55,8 +57,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    usetGet: id => {
-      dispatch(toggleTodo(id))
+    userGet: id => {
+      dispatch(fetchUser(id))
     }
   }
 }
