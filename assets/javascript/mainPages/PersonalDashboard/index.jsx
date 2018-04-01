@@ -20,7 +20,7 @@ class PersonalDashboard extends Component {
     componentDidMount(){
         const component = this;
         const { fetchUser } = this.props;
-        fetchUser({});
+        fetchUser();
     }
 
     componentWillReceiveProps(nextProps){

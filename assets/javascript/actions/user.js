@@ -6,7 +6,7 @@ export function fetchUser(){
     return {
         type: [GET_USER, GET_USER_SUCCESS, GET_USER_ERROR],
         middlewareType: 'sockets',
-        sockets: 'users',
+        socketNamespace: 'users',
         socketEvent: 'get',
     };
 }
