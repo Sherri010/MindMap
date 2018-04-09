@@ -1,6 +1,9 @@
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
+var path = require('path');
+var appDir = path.dirname(require.main.filename);
+
 // loads environment variables from a .env file into process.env.
 require('dotenv').config();
 
@@ -8,8 +11,8 @@ require('dotenv').config();
 var express = require('express');
 var app = express();
 var server = require('http').Server(app);
-var io = require('socket.io')(server);
-var models = require('./server/models/index');
+// var io = require('socket.io')(server);
+var models = require('./models/index');
 
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
@@ -19,6 +22,9 @@ var redis   = require("redis");
 var redisStore = require('connect-redis')(session);
 var client  = redis.createClient();
 
+
+const rootPath = __dirname.replace('/server', '');
+console.log(rootPath)
 var sessionMiddleware = session({
 	secret: process.env.SESSION_SECRET, //salt
 	store: new redisStore({ host: 'localhost', port: 6379, client: client,ttl :  260}),
@@ -26,49 +32,49 @@ var sessionMiddleware = session({
 	saveUninitialized: false, //create cookie only when a user is logged in
 });
 
-io.use(function(socket, next) {
-    sessionMiddleware(socket.request, socket.request.res, next);
-});
+// io.use(function(socket, next) {
+//     sessionMiddleware(socket.request, socket.request.res, next);
+// });
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(validator());
-app.use(express.static(__dirname + '/assets/'));
+app.use(express.static(rootPath + '/assets/'));
 
 // session
 app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
 
-server.listen(4567, function() {console.log('Listening on 4567...')});
+// server.listen(4567, function() {console.log('Listening on 4567...')});
 
 /////////////
 ///sockets
 /////////////
 
-io.on('connection', function(socket){
-	console.log('Client connected...');
-
-	socket.on('user', function(data, cb){
-		console.log('USER SOCKET', socket.request.session)
-		let user;
-		models.User.find({
-			where: {
-				id: socket.request.session.userId,
-			}
-		}).then(function(user){
-			if(user){
-				 cb(user)
-			}
-			else {
-				// res.status(500).send('No User Found');
-				cb('No User Found')
-			}
-		});
-	});
-});
-
+// io.on('connection', function(socket){
+// 	console.log('Client connected...');
+//
+// 	socket.on('user', function(data, cb){
+// 		console.log('USER SOCKET', socket.request.session)
+// 		let user;
+// 		models.User.find({
+// 			where: {
+// 				id: socket.request.session.userId,
+// 			}
+// 		}).then(function(user){
+// 			if(user){
+// 				 cb(user)
+// 			}
+// 			else {
+// 				// res.status(500).send('No User Found');
+// 				cb('No User Found')
+// 			}
+// 		});
+// 	});
+// });
+//
 
 
 ///////////////////auth
@@ -130,7 +136,7 @@ passport.use(
 
 
 app.get('/', function(req, res) {
-	res.sendFile(__dirname + '/assets/index.html');
+	res.sendFile(rootPath + '/assets/index.html');
 });
 
 ////////////////
@@ -157,7 +163,7 @@ app.get('/auth/google/callback',
 
 app.get('/personalLibrary',function(req,res){
 	req.session.userId = req.user.id;
-	res.sendFile(__dirname + '/assets/index.html');
+	res.sendFile(rootPath + '/assets/index.html');
 });
 
 
@@ -187,3 +193,9 @@ app.get('/logout', ensureAuthenticated, function (req, res) {
 	req.logout()
   	res.redirect('/');
 });
+
+module.exports = {
+    sessionMiddleware,
+    app,
+    server,
+}
