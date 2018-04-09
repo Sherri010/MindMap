@@ -1,12 +1,10 @@
 import React,{ Component } from 'react';
-import PropTypes from 'prop-types';
-// import { getUser } from '../../sockets/users';
-import { fetchUser } from '../../actions';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
-
-let user;
+import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
+import DashboardNavBar from '../../components/DashboardNavBar';
+import * as styles from './PersonalDashboard.styl';
+import { fetchUser } from '../../actions';
 
 
 class PersonalDashboard extends Component {
@@ -27,20 +25,35 @@ class PersonalDashboard extends Component {
         const { user: { id } } = nextProps;
 
         if(id && id !== this.props.user.id){
-            // fetchUserNoteBooks({
-            //     UserId: id,
-            // });
-            console.log('get user notebooks', id)
+            this.fetchUserNoteBooks(nextProps);
         }
     }
 
+    fetchUserNoteBooks = (props) => {
+        const { user: { id } } = props;
+
+    }
+
+    renderNoteBooksList = () => {
+
+    }
+
     render(){
-        const { user: { firstName, lastName } } = this.props;
+        const { user } = this.props;
 
         return (
             <div>
-                <h3>Personal Dashboard</h3>
-                <p>{firstName} {lastName}</p>
+                <DashboardNavBar
+                    user={user}
+                />
+                <div className={styles.dashboardWrapper}>
+                    <div className={styles.listWrapper}>
+                        {this.renderNoteBooksList()}
+                    </div>
+                    <div className={styles.activeNnoteBookWrapper}>
+
+                    </div>
+                </div>
             </div>
         );
     }
