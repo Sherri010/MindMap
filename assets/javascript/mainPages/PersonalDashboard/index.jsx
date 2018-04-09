@@ -1,37 +1,71 @@
 import React,{ Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { getUser } from '../../sockets/users';
+import { bindActionCreators } from 'redux';
+import DashboardNavBar from '../../components/DashboardNavBar';
+import * as styles from './PersonalDashboard.styl';
+import { fetchUser } from '../../actions';
 
-let user;
 
-
-export default class PersonalDashboard extends Component {
+class PersonalDashboard extends Component {
     constructor(props){
         super(props);
         this.state = {
             user: {},
-        }
+        };
     }
 
     componentDidMount(){
         const component = this;
-        getUser(function getUserCallback(res){
-            // user = console.log(res)
-            user = res;
-            component.setState({ user })
-            console.log('CDM', user)
-        });
+        const { fetchUser } = this.props;
+        fetchUser();
+    }
+
+    componentWillReceiveProps(nextProps){
+        const { user: { id } } = nextProps;
+
+        if(id && id !== this.props.user.id){
+            this.fetchUserNoteBooks(nextProps);
+        }
+    }
+
+    fetchUserNoteBooks = (props) => {
+        const { user: { id } } = props;
+
+    }
+
+    renderNoteBooksList = () => {
+
     }
 
     render(){
-        const { user } = this.state;
-        console.log('redern', user)
-        const { lastName } = user;
+        const { user } = this.props;
 
         return (
             <div>
-                <h3>Personal Dashboard {lastName}</h3>
+                <DashboardNavBar
+                    user={user}
+                />
+                <div className={styles.dashboardWrapper}>
+                    <div className={styles.listWrapper}>
+                        {this.renderNoteBooksList()}
+                    </div>
+                    <div className={styles.activeNnoteBookWrapper}>
+
+                    </div>
+                </div>
             </div>
         );
     }
 }
+
+const mapStateToProps = (state, ownProps) => {
+    const { user } = state;
+    return {
+        user,
+    };
+}
+
+export default connect(mapStateToProps, {
+    fetchUser,
+})(PersonalDashboard);
