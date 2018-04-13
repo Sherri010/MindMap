@@ -6,7 +6,7 @@ import {
 
 
 const initialState = {
-    noteBooks: [],
+    notebooks: [],
 };
 
 export default function notebooks(state = initialState, action){
@@ -17,9 +17,10 @@ export default function notebooks(state = initialState, action){
                 isFetching: true,
             };
         case FETCH_NOTEBOOKS_SUCCESS:
+        console.log('ACTION', action)
             return {
                 ...state,
-                notebooks: [],
+                notebooks: action.notebooks,
             };
         case FETCH_NOTEBOOKS_ERROR:
             return {

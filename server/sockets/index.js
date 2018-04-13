@@ -28,6 +28,17 @@ io.on('connection', function(socket){
 	});
 
     socket.on('userNoteBooks', function({ UserId }, cb){
-        console.log('search userNodeBooks', UserId)
+        models.Notebook.findAll({
+            where: {
+                name: 'sherri sockets',
+            }
+        }).then(function(notebooks = []){
+                if(notebooks){
+                    cb({ notebooks })
+                }
+                else {
+                    cd([]);
+                }
+            });
     });
 });
