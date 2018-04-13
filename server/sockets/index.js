@@ -1,4 +1,5 @@
 const { sessionMiddleware, server } = require('../app.js');
+var models = require('../models/index');
 
 var io = require('socket.io')(server);
 io.use(function(socket, next) {
@@ -25,4 +26,8 @@ io.on('connection', function(socket){
 			}
 		});
 	});
+
+    socket.on('userNoteBooks', function({ UserId }, cb){
+        console.log('search userNodeBooks', UserId)
+    });
 });
