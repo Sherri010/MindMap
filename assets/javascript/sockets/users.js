@@ -1,5 +1,8 @@
-import socket  from './socket.js';
+import Socket  from './socket.js';
+const users = new Socket('users');
 
-export function get(cb, args){
-    return socket.emit('user',args, cb);
+    console.log('USERS socket', users)
+export function get(args){
+    console.log('------> USER', args)
+    return users.emit('get');
 }
