@@ -15,7 +15,7 @@ io
     console.log('USER connected...');
 
     socket.on('get', function(data, cb){
-        console.log('USER SOCKET', socket.request.session)
+        console.log('USER SOCKET', data, cb)
         let user;
         models.User.find({
             where: {
@@ -27,7 +27,7 @@ io
             }
             else {
                 // res.status(500).send('No User Found');
-                cb('No User Found')
+                throw new Error('User not found');
             }
         });
     });

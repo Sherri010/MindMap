@@ -18,22 +18,13 @@ export default class Socket{
     }
 
     emit = (namespace, props) => {
-        console.log('EMIT', this.socket)
 		return new Promise((resolve, reject) => {
-			this.socket.emit(namespace, props, (err, res) => {
-                console.log('inside')
+			this.socket.emit(namespace, props, (res, err) => {
 				if (err){
 					return reject(err);
 				}
-
 				resolve(res);
 			});
-		})
-		.then((res) => {
-			return res;
-		})
-		.catch((err) => {
-			return Promise.reject(err);
 		});
 	}
 
