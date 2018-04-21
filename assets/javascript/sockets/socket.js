@@ -3,11 +3,6 @@ import io from 'socket.io-client';
 const socket = io.connect('http://localhost:4567', { rejectUnauthorized : false });
 const socketsMap = {};
 
-// socket.on('connection', function () {
-//     socket.emit('greet', { message: 'client connets' });
-// });
-// /, { showAutoConfirmed = false, showSuccess = false, showError = true, modalProps, showConfirmation = true } = {}
-
 export default class Socket{
     constructor(namespace){
         this.socket = this.getSocket(namespace);
@@ -31,5 +26,4 @@ export default class Socket{
     on = (namespace, cb) => {
 		this.socket.on(namespace, cb);
 	}
-
 }

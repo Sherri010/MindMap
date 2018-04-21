@@ -15,7 +15,6 @@ io
     console.log('USER connected...');
 
     socket.on('get', function(data, cb){
-        console.log('USER SOCKET', data, cb)
         let user;
         models.User.find({
             where: {
@@ -33,6 +32,26 @@ io
     });
 });
 
+
+io
+.of('/notebooks')
+.on('connection', function(socket){
+    socket.on('search', function({ UserId }, cb){
+        models.Notebook.findAll({
+            where: {
+                name: 'sherri sockets',
+            }
+        }).then(function(notebooks = []){
+                if(notebooks){
+                    cb({ notebooks })
+                }
+                else {
+                    cd([]);
+                }
+            });
+    });
+
+});
 // users.on('connection', function(){
 //     console.log('USER connected...');
 //
