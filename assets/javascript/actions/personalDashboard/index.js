@@ -1,11 +1,4 @@
 import {
-    fetchUser,
-    GET_USER,
-    GET_USER_SUCCESS,
-    GET_USER_ERROR,
-} from './user';
-
-import {
     fetchUserNoteBooks,
     FETCH_NOTEBOOKS,
     FETCH_NOTEBOOKS_SUCCESS,
@@ -14,7 +7,7 @@ import {
     POST_NOTEBOOK,
     POST_NOTEBOOK_SUCCESS,
     POST_NOTEBOOK_ERROR,
-} from './personalDashboard';
+} from './notebooks';
 
 export {
     fetchUserNoteBooks,
@@ -25,8 +18,4 @@ export {
     POST_NOTEBOOK,
     POST_NOTEBOOK_SUCCESS,
     POST_NOTEBOOK_ERROR,
-    fetchUser,
-    GET_USER,
-    GET_USER_SUCCESS,
-    GET_USER_ERROR,
-};
+}

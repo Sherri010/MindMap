@@ -2,9 +2,8 @@ var webpack = require('webpack');
 var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
-// todo 'react-hot',
 module.exports = {
-	entry: './javascript/app.jsx',
+	entry: ["babel-polyfill", './javascript/app.jsx'],
 	output: {
 		path: path.join(__dirname, '/dist'),
 		filename: 'bundle.js',
@@ -21,7 +20,7 @@ module.exports = {
 				exclude: /node_modules/,
 				query: {
 					cacheDirectory: true,
-					presets: ['react', 'es2015'],
+					presets: ['react', 'es2015', "stage-0"],
 		 			plugins: ['transform-class-properties']
 				}
 			},

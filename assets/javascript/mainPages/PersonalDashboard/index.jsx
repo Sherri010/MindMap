@@ -4,7 +4,10 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import DashboardNavBar from '../../components/DashboardNavBar';
 import * as styles from './PersonalDashboard.styl';
-import { fetchUser } from '../../actions';
+import {
+    fetchUser,
+    fetchUserNoteBooks,
+} from '../../actions';
 
 
 class PersonalDashboard extends Component {
@@ -30,8 +33,10 @@ class PersonalDashboard extends Component {
     }
 
     fetchUserNoteBooks = (props) => {
-        const { user: { id } } = props;
-
+        const { user: { id }, fetchUserNoteBooks } = props;
+        fetchUserNoteBooks({
+            UserId: id,
+        });
     }
 
     renderNoteBooksList = () => {
@@ -68,4 +73,5 @@ const mapStateToProps = (state, ownProps) => {
 
 export default connect(mapStateToProps, {
     fetchUser,
+    fetchUserNoteBooks,
 })(PersonalDashboard);
