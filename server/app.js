@@ -11,7 +11,6 @@ require('dotenv').config();
 var express = require('express');
 var app = express();
 var server = require('http').Server(app);
-// var io = require('socket.io')(server);
 var models = require('./models/index');
 
 var cookieParser = require('cookie-parser');
@@ -32,10 +31,6 @@ var sessionMiddleware = session({
 	saveUninitialized: false, //create cookie only when a user is logged in
 });
 
-// io.use(function(socket, next) {
-//     sessionMiddleware(socket.request, socket.request.res, next);
-// });
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -47,37 +42,7 @@ app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
 
-// server.listen(4567, function() {console.log('Listening on 4567...')});
-
-/////////////
-///sockets
-/////////////
-
-// io.on('connection', function(socket){
-// 	console.log('Client connected...');
-//
-// 	socket.on('user', function(data, cb){
-// 		console.log('USER SOCKET', socket.request.session)
-// 		let user;
-// 		models.User.find({
-// 			where: {
-// 				id: socket.request.session.userId,
-// 			}
-// 		}).then(function(user){
-// 			if(user){
-// 				 cb(user)
-// 			}
-// 			else {
-// 				// res.status(500).send('No User Found');
-// 				cb('No User Found')
-// 			}
-// 		});
-// 	});
-// });
-//
-
-
-///////////////////auth
+/// auth --------------------------------------
 
 // used to serialize the user for the session
 passport.serializeUser(function(user, done) {
@@ -139,10 +104,7 @@ app.get('/', function(req, res) {
 	res.sendFile(rootPath + '/assets/index.html');
 });
 
-////////////////
-//auth
-///////////////
-// TODO fix the path to match the callback
+
 app.get('/login',
   passport.authenticate(
 		'google',
@@ -165,25 +127,6 @@ app.get('/personalLibrary',function(req,res){
 	req.session.userId = req.user.id;
 	res.sendFile(rootPath + '/assets/index.html');
 });
-
-
-// TODO make this a protected route
-app.get('/user', function(req,res){
-	const userId = req.session.user.id;
-	models.User.find({
-		where: {
-			id: userId,
-		}
-	}).then(function(user){
-		if(user){
-			res.send(user);
-		}
-		else {
-			res.status(500).send('No User Found');
-		}
-	});
-});
-
 
 app.get('/logout', ensureAuthenticated, function (req, res) {
 	console.log('USER',req.session.passport.user, 'is logging out');
