@@ -12,10 +12,7 @@ var notebooks = io.of('/notebooks');
 io
 .of('/users')
 .on('connection', function(socket){
-    console.log('USER connected...');
-
     socket.on('get', function(data, cb){
-        let user;
         models.User.find({
             where: {
                 id: socket.request.session.userId,
@@ -38,7 +35,7 @@ io
     socket.on('search', function({ UserId }, cb){
         models.Notebook.findAll({
             where: {
-                name: 'sherri sockets',
+                UserId,
             }
         }).then(function(notebooks = []){
                 if(notebooks){

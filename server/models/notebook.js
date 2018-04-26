@@ -8,7 +8,10 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
-        // associations can be defined here
+		  Notebook.belongsTo(models.User, {
+          foreignKey: 'UserId',
+          onDelete: 'CASCADE'
+        });
       }
     }
   });
