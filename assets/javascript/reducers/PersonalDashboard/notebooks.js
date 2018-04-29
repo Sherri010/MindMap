@@ -21,7 +21,6 @@ export default function notebooks(state = initialState, action){
                 isFetching: true,
             };
         case FETCH_NOTEBOOKS_SUCCESS:
-        console.log('ACTION', action)
             return {
                 ...state,
                 notebooks: action.notebooks,
@@ -37,7 +36,6 @@ export default function notebooks(state = initialState, action){
                 isFetching: true,
             };
         case POST_NOTEBOOK_SUCCESS:
-            console.log('POSTED', action)
             return {
                 ...state,
                 notebooks: [].concat(state.notebooks, [action.notebook]),

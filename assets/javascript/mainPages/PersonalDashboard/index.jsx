@@ -1,46 +1,35 @@
 import React,{ Component } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { bindActionCreators } from 'redux';
+import { format } from 'date-fns';
 import DashboardNavBar from '../../components/DashboardNavBar';
 import * as styles from './PersonalDashboard.styl';
-import {
-    fetchUser,
-    fetchUserNoteBooks,
-} from '../../actions';
 
+export default class PersonalDashboard extends Component {
+	static propTypes = {
+		user: PropTypes.object,
+		notebooks: PropTypes.arrayOf(PropTypes.object),
+	}
 
-class PersonalDashboard extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            user: {},
-        };
-    }
-
-    componentDidMount(){
-        const component = this;
-        const { fetchUser } = this.props;
-        fetchUser();
-    }
-
-    componentWillReceiveProps(nextProps){
-        const { user: { id } } = nextProps;
-
-        if(id && id !== this.props.user.id){
-            this.fetchUserNoteBooks(nextProps);
-        }
-    }
-
-    fetchUserNoteBooks = (props) => {
-        const { user: { id }, fetchUserNoteBooks } = props;
-        fetchUserNoteBooks({
-            UserId: id,
-        });
-    }
+	static defaultPropTypes = {
+		user: {},
+		notebooks: [],
+	}
 
     renderNoteBooksList = () => {
+		const { notebooks } = this.props;
 
+		const list =  notebooks.map((notebook) =>{
+			const { name, createdAt } = notebook;
+			return(
+				<li>
+					<h5>{name}</h5>
+					<span>{format(createdAt, 'DD/MM/YYYY')}</span>
+				</li>
+			)
+		});
+
+		console.log(list)
+		return list;
     }
 
     render(){
@@ -53,7 +42,9 @@ class PersonalDashboard extends Component {
                 />
                 <div className={styles.dashboardWrapper}>
                     <div className={styles.listWrapper}>
-                        {this.renderNoteBooksList()}
+						<ul>
+							{this.renderNoteBooksList()}
+						</ul>
                     </div>
                     <div className={styles.activeNnoteBookWrapper}>
 
@@ -63,15 +54,3 @@ class PersonalDashboard extends Component {
         );
     }
 }
-
-const mapStateToProps = (state, ownProps) => {
-    const { user } = state;
-    return {
-        user,
-    };
-}
-
-export default connect(mapStateToProps, {
-    fetchUser,
-    fetchUserNoteBooks,
-})(PersonalDashboard);

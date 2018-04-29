@@ -19,14 +19,19 @@ var validator = require('express-validator');
 var bodyParser = require('body-parser');
 var redis   = require("redis");
 var redisStore = require('connect-redis')(session);
+var uuid = require('node-uuid');
 var client  = redis.createClient();
 
 
 const rootPath = __dirname.replace('/server', '');
 console.log(rootPath)
 var sessionMiddleware = session({
+	genid: function(req) {
+        return uuid.v4();
+    },
 	secret: process.env.SESSION_SECRET, //salt
 	store: new redisStore({ host: 'localhost', port: 6379, client: client,ttl :  260}),
+	expires: new Date(Date.now() + (30)),
 	resave: false, // update session whenever there is a change only
 	saveUninitialized: false, //create cookie only when a user is logged in
 });
@@ -124,6 +129,7 @@ app.get('/auth/google/callback',
 });
 
 app.get('/personalLibrary',function(req,res){
+	console.log('___>', req)
 	req.session.userId = req.user.id;
 	res.sendFile(rootPath + '/assets/index.html');
 });

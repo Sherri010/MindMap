@@ -10,7 +10,6 @@ export default store => next => action => {
   const [actionType, actionTypeSuccess, actionTypeError] = action.type;
 
   next({ type: actionType });
-  console.log('socket', sockets[socketNamespace][socketEvent], data)
   sockets[socketNamespace][socketEvent](data)
   .then((response) => {
       return next({

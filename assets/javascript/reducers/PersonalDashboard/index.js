@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 
-import noteBooks from './notebooks';
+import notebooks from './notebooks';
 
 export default combineReducers({
-	noteBooks,
+	notebooks,
 });
