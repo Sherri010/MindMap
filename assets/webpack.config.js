@@ -10,7 +10,12 @@ module.exports = {
 		publicPath: 'http://localhost:3000',
 	},
 	resolve: {
-		extensions: ['.js', '.jsx']
+		extensions: ['.js', '.jsx'],
+		modules: [
+		  'node_modules',
+		  path.join(__dirname, 'src/scripts'),
+		  path.join(__dirname, 'src')
+		]
 	},
 	module: {
 		loaders: [
@@ -46,7 +51,11 @@ module.exports = {
 						},
 					],
 				},
-		]
+				{
+					test: /\.css$/,
+					loader: 'style-loader!css-loader',
+				}
+		],
  },
 	plugins: [
     new HtmlWebpackPlugin({
