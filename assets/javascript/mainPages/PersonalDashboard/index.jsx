@@ -5,7 +5,7 @@ import AceEditor from 'react-ace';
 
 import 'brace/mode/javascript';
 import 'brace/theme/monokai';
-import { format } from 'date-fns';
+import { format, distanceInWordsToNow } from 'date-fns';
 import DashboardNavBar from '../../components/DashboardNavBar';
 
 import * as styles from './PersonalDashboard.styl';
@@ -81,7 +81,7 @@ export default class PersonalDashboard extends Component {
 				<React.Fragment>
 					<div className={styles.activeNotebookHeader}>
 						<h2 className={styles.activeNotebookName}>{name}</h2>
-						<p>last updated at {updatedAt}</p>
+						<p>last updated at {distanceInWordsToNow(updatedAt, {addSuffix: true})}</p>
 					</div>
 					<AceEditor
 						value={activeNotebookContent}

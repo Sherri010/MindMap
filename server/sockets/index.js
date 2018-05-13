@@ -54,7 +54,9 @@ io
 			}
 		}).then(function(notebook){
 			notebook.update({ content }).then(() => {
-				cb({ notebook });
+				notebook.reload().then(() => {
+					cb({ notebook });
+				});
 			});
 		});
 	});

@@ -5,6 +5,9 @@ import {
     POST_NOTEBOOK,
     POST_NOTEBOOK_SUCCESS,
     POST_NOTEBOOK_ERROR,
+	PATCH_NOTEBOOK,
+	PATCH_NOTEBOOK_SUCCESS,
+	PATCH_NOTEBOOK_ERROR,
 } from '../../actions';
 
 
@@ -45,6 +48,26 @@ export default function notebooks(state = initialState, action){
                 ...state,
                 isFetching: false,
             }
+		case PATCH_NOTEBOOK:
+			return {
+				...state,
+				isFetching: true,
+			};
+		case PATCH_NOTEBOOK_SUCCESS:
+			return {
+				...state,
+				isFetching: false,
+				notebooks: state.notebooks.map((notebook) => {
+					if (notebook.id === action.notebook.id) return action.notebook;
+					return notebook;
+				}),
+			};
+		case PATCH_NOTEBOOK_ERROR:
+			return {
+				...state,
+				isFetching: false,
+				err: action.error,
+			}
         default:
             return state;
     }
