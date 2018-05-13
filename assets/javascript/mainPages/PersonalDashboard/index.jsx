@@ -81,7 +81,7 @@ export default class PersonalDashboard extends Component {
 				<React.Fragment>
 					<div className={styles.activeNotebookHeader}>
 						<h2 className={styles.activeNotebookName}>{name}</h2>
-						<p>last updated at {distanceInWordsToNow(updatedAt, {addSuffix: true})}</p>
+						<p className={styles.updateTimestamp}>last updated {distanceInWordsToNow(updatedAt, {addSuffix: true})}</p>
 					</div>
 					<AceEditor
 						value={activeNotebookContent}
