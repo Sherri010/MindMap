@@ -8,3 +8,7 @@ export function search(args){
 export function post(args){
     return notebooks.emit('post', args);
 }
+
+export function patch(args){
+	return notebooks.emit('patch', args);
+}

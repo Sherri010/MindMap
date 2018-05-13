@@ -5,6 +5,7 @@ import PersonalDashboard from '../../mainPages/PersonalDashboard';
 import {
     fetchUser,
     fetchUserNoteBooks,
+	patchUserNoteBook,
 } from '../../actions';
 
 class PersonalDashboardContainer extends Component {
@@ -32,6 +33,17 @@ class PersonalDashboardContainer extends Component {
         });
     }
 
+	handleUpdateNotebook = ({ id, content }) => {
+		const { patchUserNoteBook } = this.props;
+
+		patchUserNoteBook({
+			id,
+			updates: {
+				content,
+			},
+		});
+	}
+
     render(){
         const { user, notebooks } = this.props;
 
@@ -39,6 +51,7 @@ class PersonalDashboardContainer extends Component {
             <PersonalDashboard
 				user={user}
 				notebooks={notebooks}
+				onUpdateNotebook={this.handleUpdateNotebook}
 			/>
         );
     }
@@ -55,4 +68,5 @@ const mapStateToProps = (state, ownProps) => {
 export default connect(mapStateToProps, {
     fetchUser,
     fetchUserNoteBooks,
+	patchUserNoteBook,
 })(PersonalDashboardContainer);

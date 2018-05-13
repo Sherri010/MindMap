@@ -6,7 +6,7 @@
 		flex-basis: 20%;
 		overflow: scroll;
 		height: 100%;
-		border-right: 2px solid #003748;
+		border-right: 2px solid #e0ebeb;
 		.notebooksList {
 			text-decoration: none;
 			margin-left: 0;
@@ -30,7 +30,15 @@
 	}
 }
 
-.codeMirror {
-	width: 100%;
-	height: 100vh;
+.activeNotebookHeader {
+
+}
+
+.activeNotebookName {
+	margin: 0;
+	padding: 0;
+}
+
+:global(.ace_editor){
+		width: 100% !important;
 }

@@ -47,4 +47,15 @@ io
             });
     });
 
+	socket.on('patch', function({ id, updates: { content } }, cb){
+		models.Notebook.find({
+			where: {
+				id,
+			}
+		}).then(function(notebook){
+			notebook.update({ content }).then(() => {
+				cb({ notebook });
+			});
+		});
+	});
 });

@@ -26,3 +26,17 @@ export function postUserNoteBook(data){
         data,
     }
 }
+
+export const PATCH_NOTEBOOK = 'PATCH_NOTEBOOK';
+export const PATCH_NOTEBOOK_SUCCESS = 'PATCH_NOTEBOOK_SUCCESS';
+export const PATCH_NOTEBOOK_ERROR = 'PATCH_NOTEBOOK_ERROR';
+
+export function patchUserNoteBook(data){
+	return {
+		type: [PATCH_NOTEBOOK, PATCH_NOTEBOOK_SUCCESS, PATCH_NOTEBOOK_ERROR],
+		middlewareType: 'sockets',
+        socketNamespace: 'notebooks',
+        socketEvent: 'patch',
+        data,
+	}
+}

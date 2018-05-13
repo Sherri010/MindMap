@@ -15,6 +15,7 @@ export default class PersonalDashboard extends Component {
 	static propTypes = {
 		user: PropTypes.object,
 		notebooks: PropTypes.arrayOf(PropTypes.object),
+		onUpdateNotebook: PropTypes.func,
 	}
 
 	static defaultPropTypes = {
@@ -24,21 +25,17 @@ export default class PersonalDashboard extends Component {
 
 	constructor(props){
 		super(props);
-		this.codeMirrorNode = null;
+		this.editTimeout = null;
 		this.state = {
 			activeNotebookId: null,
+			activeNotebookContent: '',
 		}
 	}
 
 	handleNotebookTitleClick = (activeNotebookId) => {
 		const { notebooks } = this.props;
-		const { content } = notebooks.find((notebook) => notebook.id === activeNotebookId) || {};
-
-		if(this.codeMirrorNode){
-			console.log('--->', this.codeMirrorNode)
-			this.codeMirrorNode.codeMirror.setValue(content || '');
-		}
-		this.setState({ activeNotebookId });
+		const { content } = notebooks.find((notebook) => notebook.id === activeNotebookId);
+		this.setState({ activeNotebookId, activeNotebookContent: content });
 	}
 
     renderNoteBooksList = () => {
@@ -59,30 +56,43 @@ export default class PersonalDashboard extends Component {
 		});
     }
 
-	handleUpdateContent = (value) => {
-		console.log(value)
+	handleUpdateContent = (activeNotebookContent) => {
+		clearTimeout(this.editTimeout);
+		this.setState({ activeNotebookContent }, () => {
+			this.editTimeout = setTimeout(this.handleUpdateNotebook, 1000);
+		});
 	}
 
-	handleSetCodeMirrorRef = (node) => {
-		this.codeMirrorNode = node;
+	handleUpdateNotebook = () => {
+		const { onUpdateNotebook } = this.props;
+		const { activeNotebookContent, activeNotebookId } = this.state;
+
+		onUpdateNotebook({ id: activeNotebookId, content: activeNotebookContent});
 	}
 
 	renderActiveNotebookEditor = () => {
 		const { notebooks } = this.props;
-		const { activeNotebookId } = this.state;
+		const { activeNotebookId, activeNotebookContent } = this.state;
 
 		if(activeNotebookId){
-			const { content, introduction, name, id } = notebooks.find((notebook) => notebook.id === activeNotebookId) || {};
+			const { introduction, name, id, updatedAt } = notebooks.find((notebook) => notebook.id === activeNotebookId);
 
 			return (
-				<AceEditor
-				   value={content ? content : 'xghfgh  #dfgsdfg'}
-				   mode="javascript"
-   	   			   theme="monokai"
-				   onChange={this.handleUpdateContent}
-				   name={`${name}_${id}`}
-				   editorProps={{$blockScrolling: true}}
-				 />
+				<React.Fragment>
+					<div className={styles.activeNotebookHeader}>
+						<h2 className={styles.activeNotebookName}>{name}</h2>
+						<p>last updated at {updatedAt}</p>
+					</div>
+					<AceEditor
+						value={activeNotebookContent}
+						mode={'markdown'}
+						theme={'xcode'}
+						onChange={this.handleUpdateContent}
+						name={`${name}_${id}`}
+						editorProps={{$blockScrolling: true}}
+						className={styles.aceEdtitor}
+					/>
+				</React.Fragment>
 			);
 		}
 		else {

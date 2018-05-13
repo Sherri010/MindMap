@@ -14,6 +14,10 @@ import {
     POST_NOTEBOOK,
     POST_NOTEBOOK_SUCCESS,
     POST_NOTEBOOK_ERROR,
+	patchUserNoteBook,
+	PATCH_NOTEBOOK,
+	PATCH_NOTEBOOK_SUCCESS,
+	PATCH_NOTEBOOK_ERROR,
 } from './personalDashboard';
 
 export {
@@ -29,4 +33,8 @@ export {
     GET_USER,
     GET_USER_SUCCESS,
     GET_USER_ERROR,
+	patchUserNoteBook,
+	PATCH_NOTEBOOK,
+	PATCH_NOTEBOOK_SUCCESS,
+	PATCH_NOTEBOOK_ERROR,
 };
