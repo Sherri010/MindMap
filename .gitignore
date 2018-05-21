@@ -5,3 +5,7 @@ npm-debug.log
 .env
 /assets/.DS_Store
 /server/config.json
+
+assets/dist/bundle\.js
+
+dump\.rdb

@@ -10,7 +10,7 @@ export default class HomePage extends Component {
         <div className={styles.header}>
           <img src={'../../images/MindMaplogo.png'}/>
           <div className={styles.loginWrapper}>
-              <a className={styles.button} href='/login'>Login</a>
+              <Link className={styles.button} to={'/login'}>Login</Link>
           </div>
         </div>
           <div className={styles.banner}>

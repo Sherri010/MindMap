@@ -1,8 +1,8 @@
 import React,{ Component } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import brace from 'brace';
 import AceEditor from 'react-ace';
-
 import 'brace/mode/javascript';
 import 'brace/theme/monokai';
 import { format, distanceInWordsToNow } from 'date-fns';
@@ -11,7 +11,7 @@ import DashboardNavBar from '../../components/DashboardNavBar';
 import * as styles from './PersonalDashboard.styl';
 
 let key = 0;
-export default class PersonalDashboard extends Component {
+class PersonalDashboard extends Component {
 	static propTypes = {
 		user: PropTypes.object,
 		notebooks: PropTypes.arrayOf(PropTypes.object),
@@ -32,10 +32,36 @@ export default class PersonalDashboard extends Component {
 		}
 	}
 
+	componentDidMount(){
+		const { notebooks } = this.props;
+		if(notebooks.length){
+			this.setState({ activeNotebookId: notebooks[0].id });
+			this.handleUpdateURL(notebooks[0].id);
+		}
+	}
+
+	componentWillReceiveProps(nextProps){
+		const { notebooks } = nextProps;
+		const { activeNotebookId } = this.state;
+
+		if(!activeNotebookId && notebooks.length){
+			this.setState({ activeNotebookId: notebooks[0].id });
+			this.handleUpdateURL(notebooks[0].id);
+		}
+	}
+
+	handleUpdateURL = (activeNotebookId) => {
+		const { history } = this.props;
+		history.replace({
+			pathname: `/personalLibrary/notebooks/${activeNotebookId}`
+		});
+	}
+
 	handleNotebookTitleClick = (activeNotebookId) => {
 		const { notebooks } = this.props;
 		const { content } = notebooks.find((notebook) => notebook.id === activeNotebookId);
 		this.setState({ activeNotebookId, activeNotebookContent: content });
+		this.handleUpdateURL(activeNotebookId);
 	}
 
     renderNoteBooksList = () => {
@@ -50,7 +76,7 @@ export default class PersonalDashboard extends Component {
 					onClick={() => this.handleNotebookTitleClick(id)}
 				>
 					<h5 className={styles.notebookTitle}>{name}</h5>
-					<h6 className={styles.timestamp}>{format(createdAt, 'DD/MM/YYYY')}</h6>
+					<h6 className={styles.timestamp}>{distanceInWordsToNow(createdAt, {addSuffix: true})}</h6>
 				</li>
 			)
 		});
@@ -73,7 +99,7 @@ export default class PersonalDashboard extends Component {
 	renderActiveNotebookEditor = () => {
 		const { notebooks } = this.props;
 		const { activeNotebookId, activeNotebookContent } = this.state;
-
+		console.log('activeNotebookContent',activeNotebookContent)
 		if(activeNotebookId){
 			const { introduction, name, id, updatedAt } = notebooks.find((notebook) => notebook.id === activeNotebookId);
 
@@ -84,7 +110,7 @@ export default class PersonalDashboard extends Component {
 						<p className={styles.updateTimestamp}>last updated {distanceInWordsToNow(updatedAt, {addSuffix: true})}</p>
 					</div>
 					<AceEditor
-						value={activeNotebookContent}
+						value={activeNotebookContent ? activeNotebookContent : 'start wriing... :)'}
 						mode={'markdown'}
 						theme={'xcode'}
 						onChange={this.handleUpdateContent}
@@ -125,3 +151,5 @@ export default class PersonalDashboard extends Component {
         );
     }
 }
+
+export default withRouter(PersonalDashboard);
