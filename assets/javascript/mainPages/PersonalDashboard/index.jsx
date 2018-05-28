@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import brace from 'brace';
 import AceEditor from 'react-ace';
+import Modal from '../../components/Modal';
 import 'brace/mode/javascript';
 import 'brace/theme/monokai';
 import { format, distanceInWordsToNow } from 'date-fns';
@@ -111,8 +112,6 @@ class PersonalDashboard extends Component {
 					</div>
 					<AceEditor
 						value={activeNotebookContent ? activeNotebookContent : 'start wriing... :)'}
-						mode={'markdown'}
-						theme={'xcode'}
 						onChange={this.handleUpdateContent}
 						name={`${name}_${id}`}
 						editorProps={{$blockScrolling: true}}
@@ -128,12 +127,22 @@ class PersonalDashboard extends Component {
 		}
 	}
 
+	handleNewNameChange = () => {
+
+	}
+
     render(){
         const { user } = this.props;
 		const { activeNotebookId } = this.state;
 
         return (
             <div>
+				<Modal>
+					<div>
+						new notebook name:
+						<input onChange={this.handleNewNameChange}/>
+					</div>
+				</Modal>
                 <DashboardNavBar
                     user={user}
                 />

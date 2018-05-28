@@ -60,4 +60,14 @@ io
 			});
 		});
 	});
+
+	socket.on('post', function({ name }, cb){
+		models.Notebook.create({
+			name
+		}).then((notebook) => {
+			notebook.reload().then(()=> {
+				cb({ notebook });
+			});
+		});
+	});
 });

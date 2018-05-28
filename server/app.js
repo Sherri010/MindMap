@@ -128,7 +128,7 @@ app.get('/auth/google/callback',
     res.redirect('/personalLibrary');
 });
 
-app.get('/personalLibrary',function(req,res){
+app.get('/personalLibrary(/*)?',ensureAuthenticated, function(req,res){
 	console.log('___>', req)
 	req.session.userId = req.user.id;
 	res.sendFile(rootPath + '/assets/index.html');
