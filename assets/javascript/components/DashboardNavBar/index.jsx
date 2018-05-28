@@ -9,23 +9,15 @@ import {
 class DashboardNavBar extends Component{
     static propTypes = {
         user: PropTypes.object,
-        onCreateNoteBook: PropTypes.func,
+        onCreateNotebookClick: PropTypes.func,
     }
 
     static defaultProps = {
         user: {},
     }
 
-    handlePostNotebook = () => {
-        const { postUserNoteBook } = this.props;
-
-        postUserNoteBook({
-            name: 'New NoteBook from socket',
-        });
-    }
-
     render(){
-        const { user: { image } } = this.props;
+        const { user: { image }, onCreateNotebookClick } = this.props;
         return(
                 <div className={styles.navBarWrapper}>
                     <div className={styles.titleWrapper}>
@@ -34,7 +26,7 @@ class DashboardNavBar extends Component{
                     <div className={styles.addButtonWrapper}>
                         <button
                             className={styles.addButton}
-                            onClick={this.handlePostNotebook}
+                            onClick={onCreateNotebookClick}
                         >+ Notebook</button>
                     </div>
                     <div className={styles.userInfo}>

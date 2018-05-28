@@ -17,6 +17,7 @@ class PersonalDashboard extends Component {
 		user: PropTypes.object,
 		notebooks: PropTypes.arrayOf(PropTypes.object),
 		onUpdateNotebook: PropTypes.func,
+		onCreateNewNotebook: PropTypes.func,
 	}
 
 	static defaultPropTypes = {
@@ -30,6 +31,7 @@ class PersonalDashboard extends Component {
 		this.state = {
 			activeNotebookId: null,
 			activeNotebookContent: '',
+			newNotebookName: '',
 		}
 	}
 
@@ -127,24 +129,47 @@ class PersonalDashboard extends Component {
 		}
 	}
 
-	handleNewNameChange = () => {
+	handleNewNameChange = (newNotebookName) => {
+		this.setState({ newNotebookName });
+	}
 
+	handleCreateNewNotebook = async () => {
+		const { onCreateNewNotebook } = this.props;
+		const { newNotebookName } = this.state;
+
+		try {
+			await onCreateNewNotebook(newNotebookName);
+			this.setState({
+				isCreateNotebookModalopen: false,
+			});
+		}
+		catch(e){
+			console.error(e);
+		}
+	}
+
+	handCreateNotebookClick = () => {
+		this.setState({ isCreateNotebookModalopen: true });
 	}
 
     render(){
         const { user } = this.props;
-		const { activeNotebookId } = this.state;
+		const { activeNotebookId, isCreateNotebookModalopen } = this.state;
 
         return (
             <div>
-				<Modal>
+				<Modal
+					showModal={isCreateNotebookModalopen}
+				>
 					<div>
 						new notebook name:
-						<input onChange={this.handleNewNameChange}/>
+						<input onChange={(e) => this.handleNewNameChange(e.target.value)}/>
+						<button onClick={this.handleCreateNewNotebook}>Save</button>
 					</div>
 				</Modal>
                 <DashboardNavBar
                     user={user}
+					onCreateNotebookClick={this.handCreateNotebookClick}
                 />
                 <div className={styles.dashboardWrapper}>
                     <div className={styles.listWrapper}>

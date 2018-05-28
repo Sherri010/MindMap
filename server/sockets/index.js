@@ -63,6 +63,7 @@ io
     socket.on('post', ({ name }, cb) => {
       models.Notebook.create({
         name,
+		UserId: socket.request.session.userId,
       }).then((notebook) => {
         notebook.reload().then(() => {
           cb({ notebook });

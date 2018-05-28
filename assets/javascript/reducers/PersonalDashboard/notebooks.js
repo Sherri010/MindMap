@@ -1,3 +1,5 @@
+import { union } from 'lodash';
+
 import {
     FETCH_NOTEBOOKS,
     FETCH_NOTEBOOKS_SUCCESS,
@@ -41,7 +43,7 @@ export default function notebooks(state = initialState, action){
         case POST_NOTEBOOK_SUCCESS:
             return {
                 ...state,
-                notebooks: [].concat(state.notebooks, [action.notebook]),
+                notebooks: union(state.notebooks, [action.notebook]),
             };
         case POST_NOTEBOOK_ERROR:
             return {

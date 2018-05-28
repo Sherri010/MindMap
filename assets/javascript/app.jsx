@@ -12,8 +12,8 @@ ReactDOM.render((
     <Provider store={store}>
         <Router>
             <div>
-                <Route exact path="/" component={HomePage}/>
-                <Route path="/personalLibrary" component={PersonalDashboardContainer}/>
+                <Route exact path={'/'} component={HomePage}/>
+                <Route path={/\/personalLibrary.*$/} component={PersonalDashboardContainer}/>
             </div>
         </Router>
     </Provider>

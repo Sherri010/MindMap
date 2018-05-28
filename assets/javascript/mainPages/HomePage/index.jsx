@@ -1,6 +1,5 @@
 import React,{ Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import * as styles from './HomePage.styl';
 
 export default class HomePage extends Component {
@@ -10,7 +9,7 @@ export default class HomePage extends Component {
         <div className={styles.header}>
           <img src={'../../images/MindMaplogo.png'}/>
           <div className={styles.loginWrapper}>
-              <Link className={styles.button} to={'/login'}>Login</Link>
+              <a className={styles.button} href={'/login'}>Login</a>
           </div>
         </div>
           <div className={styles.banner}>

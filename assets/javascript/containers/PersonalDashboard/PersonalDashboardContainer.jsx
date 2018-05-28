@@ -6,6 +6,7 @@ import {
     fetchUser,
     fetchUserNoteBooks,
 	patchUserNoteBook,
+	postUserNoteBook,
 } from '../../actions';
 
 class PersonalDashboardContainer extends Component {
@@ -44,6 +45,14 @@ class PersonalDashboardContainer extends Component {
 		});
 	}
 
+	handleCreateNewNotebook = async (name) => {
+		const { postUserNoteBook } = this.props;
+
+		const response = await postUserNoteBook({ name });
+		console.log('response', response);
+
+	}
+
     render(){
         const { user, notebooks } = this.props;
 
@@ -52,6 +61,7 @@ class PersonalDashboardContainer extends Component {
 				user={user}
 				notebooks={notebooks}
 				onUpdateNotebook={this.handleUpdateNotebook}
+				onCreateNewNotebook={this.handleCreateNewNotebook}
 			/>
         );
     }
@@ -69,4 +79,5 @@ export default connect(mapStateToProps, {
     fetchUser,
     fetchUserNoteBooks,
 	patchUserNoteBook,
+	postUserNoteBook,
 })(PersonalDashboardContainer);

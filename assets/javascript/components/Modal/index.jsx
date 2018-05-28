@@ -2,7 +2,16 @@ import React,{ Component } from 'react';
 import PropTypes from 'prop-types';
 
 export default class Modal extends Component{
+	static propTypes = {
+		showModal: PropTypes.bool,
+	}
+
+	static defaultProps = {
+		showModal: false,
+	};
+
 	render(){
+		const { showModal } = this.props;
 		const backdropStyle = {
 			position: 'fixed',
 			top: 0,
@@ -24,6 +33,8 @@ export default class Modal extends Component{
 			padding: 30,
 			zIndex: 200,
 	  	};
+
+		if(!showModal) return null;
 
 		return (
 			<div className="backdrop" style={backdropStyle}>
